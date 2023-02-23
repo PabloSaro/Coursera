@@ -23,20 +23,19 @@
 #include <stdlib.h>
 #include "misc.h"
 
-static int g1;
-const int g2 = 45; //1532 PROBAR 1512
+static int g1; //2332*
+const int g2 = 45; //1512 *
 char g3 = 12; // 2432*
-char g4 = 0;  // Probar 2332
-extern char g5[N]; //  G5 -> 2432*
+char g4 = 0;  // 2332*
+extern char g5[N]; //  G5 -> 2432* N-> 2432 -- 2132 -- 2412 - 1712 --2732--2332
 
 int main() //1712 -> main*
 {
-  register int l1; //2431 - 1131 PROBAR 1111
-  int * l2; //2131
-  volatile int l3 = 12; //2431
+  register int l1; //2431 - 2131 -- 2111 -- 2431-- 2231-- 1512--
+  int * l2; //2131*
+  volatile int l3 = 12; //2131*
   
-  l2 = (int *) malloc( N * g2 * sizeof(char) );
-
+  l2 = (int *) malloc( N * g2 * sizeof(char) );//2433 --- 2233*
   if ( ! l2 )
   {
     return -1;

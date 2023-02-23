@@ -8,34 +8,30 @@
  * misuse of this material. 
  *
  *****************************************************************************/
-
 /**
- * @file misc.h 
- * @brief This file is to be used for the c1m2 assesment
+ * @file main.c
+ * @brief Main entry point to the C1M2 Assessment
+ *
+ * This file contains the main code for the C1M2 assesment. Students
+ * are not to change any of the code, they are instead supposed to compile
+ * these files with their makefile.
  *
  * @author Alex Fosdick
- * @date April 2, 2017
+ * @date April 1 2017
  *
  */
-#include "misc.h"
+//#include "platform.h"
+//#include "memory.h"
+#include "course1.h"
 
-#define SOME_VALUE (6) //1512 -- 1632 --- 1513 --1732 -- 2331
+#define MAX_LENGTH (10)
+char buffer[MAX_LENGTH];
 
-int g5[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-int func(int * f1) // 1712 -> func* //  2131 ->f1*
-{
-  static int f2; // 2431 -- 2332  -- 2433 -- 2434--- 2331--1712-2333--2433--2432--
-  unsigned int f3 = 0; //2131*
-  volatile char * f4 = "Hello World!\n"; //1512*
-  f2++;
-  *(&g5[0] + f2) = f3;
-
-  for (f3 = 0; f3 < SOME_VALUE; f3++)
-  {
-    g5[f3] = f4[f3];
-    f2++;
-  }
-
-  return f2;
+/* A pretty boring main file */
+int main(void) {
+  #ifdef COURSE1
+    course1();
+  #endif
+  return 0;
 }
+

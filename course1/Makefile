@@ -32,31 +32,23 @@ include sources.mk
 #SPECS = specs
 
 # Compiler Flags and Defines
-PLATFORM= HOST
+PLATFORM  = HOST
 TARGET = c1m2
-PWD = $(pwd) 
+PWD := $(pwd) 
 #OBJS := $(SOURCES:.c = .o)
-
-
-AS = gcc -S
-LD = gcc 
-LDFLAGS = 
+	
+LD = -Wl
+LDFLAGS =
 CFLAGS = -Wall \
 		-Werror \
 		-g	\
 		-O0	\
 		-std=c99 
 CC = gcc
-	
 
 
 ifeq ($(PLATFORM),MSP432)
-	AS = arm-none-eabi-gcc
-	CC =arm-none-eabi-gcc
-	LD =arm-none-eabi-gcc
-	LDFLAGS =-Xlinker -Map=$(TARGET).map \
-			-T ./../msp432p401r.lds
-	CFLAGS =-Wall \
+	CFLAGS = -Wall \
 			-Werror \
 			-g	\
 			-O0	\
@@ -67,32 +59,48 @@ ifeq ($(PLATFORM),MSP432)
 			-mfloat-abi=hard \
 			-mfpu=fpv4-sp-d16 \
 			--specs=nosys.specs
+
+	CC = arm-none-eabi-gcc
+	LD =arm-none-eabi-ld
+	LDFLAGS =-Xlinker -Map=$(TARGET).map \
+			-T msp432p401r.lds
+
+
 endif
 
 %.i : %.c
-	$(CC) -E -D$(PLATFORM) $(INCLUDES) -o $@ -c $<
-%.asm: %.i
-	$(AS) -S -D$(PLATFORM) $(INCLUDES) -o $@ -c $<
-%.o : %.c
-	$(CC) -O -D$(PLATFORM) $(INCLUDES) -o $@ -c $<
+	$(CC) -D$(PLATFORM) -E $(INCLUDES) -o $@ $<
+%.asm : %.i
+	$(CC) -D$(PLATFORM) -S $(INCLUDES) -o $@ $<
+%.o : %.asm 
+	$(CC) -D$(PLATFORM) -O $(INCLUDES) -o $@ $<
 
 
- 
 
+ifeq ($(COURSE1),COURSE1)
+	COURSE1 = COURSE1
+endif
+
+ifeq ($(VERBOSE), VERBOSE)
+	VERBOSE = VERBOSE
+endif
 .PHONY: compile-all
 compile-all: $(SOURCES)
-	$(CC) -E -D$(PLATFORM) $(INCLUDES) -o $<.asm $< 
-	$(AS) -S -D$(PLATFORM) $(INCLUDES) -o $@.asm -c $<
-	$(CC) -O -D$(PLATFORM) $(INCLUDES) -o $@.o -c $<
-
+%.i : memory.c
+	$(CC) -D$(PLATFORM) -E $(INCLUDES) -o $@ $<
+%.i : main.c
+	$(CC) -D$(PLATFORM) -E $(INCLUDES) -o $@ $<
+%.asm : %.i
+	$(CC) -D$(PLATFORM) -S $(INCLUDES) -o $@ $<
+%.o : %.asm 
+	$(CC) -D$(PLATFORM) -O $(INCLUDES) -o $@ $<
+	
 
 .PHONY: build
-build:
-	$(CC) -D$(PLATFORM) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $(TARGET).out $(SOURCES)
-#./%.i : ./%.c
-#	$(CC) -E -D$(PLATFORM) $(INCLUDES) -o $@ -c $<
-#	$(AS) -S -D$(PLATFORM) $(INCLUDES) -o $@ -c $<
-#	$(CC) -O -D$(PLATFORM) $(INCLUDES) -o $@ -c $<
+build : $(SOURCES)
+	$(CC) -D$(COURSE1) -D$(PLATFORM)  $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $(TARGET).out $(SOURCES)
+
+
 #	$(CC) -D$(PLATFORM) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $(TARGET).out $(SOURCES)
 
 

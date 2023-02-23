@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "data.h": "c",
+        "course1.h": "c",
+        "platform.h": "c"
+    }
+}
